@@ -8,16 +8,16 @@ const RUN_OPTIONS_DEFAULTS = { dir: null, ignoreErrors: false, prefix: "" };
  * @param {"info" | "warning" | "error"} level - Log level
  */
 function log(msg, level = "info") {
-	switch (level) {
-		case "error":
-			console.error(msg);
-			break;
-		case "warning":
-			console.warn(msg); // eslint-disable-line no-console
-			break;
-		default:
-			console.log(msg); // eslint-disable-line no-console
-	}
+  switch (level) {
+    case "error":
+      console.error(msg);
+      break;
+    case "warning":
+      console.warn(msg); // eslint-disable-line no-console
+      break;
+    default:
+      console.log(msg); // eslint-disable-line no-console
+  }
 }
 
 /**
@@ -29,16 +29,16 @@ function log(msg, level = "info") {
  * @returns {string | null} - Value of the environment variable
  */
 function getEnv(name, required = false) {
-	const nameUppercase = name.toUpperCase();
-	const value = process.env[nameUppercase];
-	if (value == null) {
-		// Value is either not set (`undefined`) or set to `null`
-		if (required) {
-			throw new Error(`Environment variable "${nameUppercase}" is not defined`);
-		}
-		return null;
-	}
-	return value;
+  const nameUppercase = name.toUpperCase();
+  const value = process.env[nameUppercase];
+  if (value == null) {
+    // Value is either not set (`undefined`) or set to `null`
+    if (required) {
+      throw new Error(`Environment variable "${nameUppercase}" is not defined`);
+    }
+    return null;
+  }
+  return value;
 }
 
 /**
@@ -50,7 +50,7 @@ function getEnv(name, required = false) {
  * @returns {string | null} - Value of the input variable
  */
 function getInput(name, required = false) {
-	return getEnv(`INPUT_${name}`, required);
+  return getEnv(`INPUT_${name}`, required);
 }
 
 /**
@@ -60,33 +60,33 @@ function getInput(name, required = false) {
  * @returns {{status: number, stdout: string, stderr: string}} - Output of the shell command
  */
 function run(cmd, options) {
-	const optionsWithDefaults = {
-		...RUN_OPTIONS_DEFAULTS,
-		...options,
-	};
+  const optionsWithDefaults = {
+    ...RUN_OPTIONS_DEFAULTS,
+    ...options,
+  };
 
-	try {
-		const output = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
-		return {
-			status: 0,
-			stdout: output.trim(),
-			stderr: "",
-		};
-	} catch (err) {
-		if (optionsWithDefaults.ignoreErrors) {
-			return {
-				status: err.status,
-				stdout: err.stdout.trim(),
-				stderr: err.stderr.trim(),
-			};
-		}
-		throw err;
-	}
+  try {
+    const output = execSync(cmd, { encoding: "utf8", cwd: optionsWithDefaults.dir });
+    return {
+      status: 0,
+      stdout: output.trim(),
+      stderr: "",
+    };
+  } catch (err) {
+    if (optionsWithDefaults.ignoreErrors) {
+      return {
+        status: err.status,
+        stdout: err.stdout.trim(),
+        stderr: err.stderr.trim(),
+      };
+    }
+    throw err;
+  }
 }
 
 module.exports = {
-	log,
-	getEnv,
-	getInput,
-	run,
+  log,
+  getEnv,
+  getInput,
+  run,
 };
