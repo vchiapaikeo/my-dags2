@@ -1,19 +1,33 @@
-on: [push]
+name: Run DAG Validation
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
-  hello_world_job:
+  validate-dag:
+    name: Performs DAG validation tests
     runs-on: ubuntu-latest
-    name: A job to say hello
+
     steps:
       # To use this repository's private action,
       # you must check out the repository
-      - name: Checkout
+      - name: Check out Git repository
         uses: actions/checkout@v2
-      - name: Hello world action step
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      # ESLint and Prettier must be in `package.json`
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Validate DAG
         uses: ./.github/workflows/ # Uses an action in the workflows directory
         id: hello
         with:
-          who-to-greet: 'Mona the Octocat'
-      # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
+          github_token: ${{ secrets.github_token }}

@@ -1,0 +1,47 @@
+name: vchiapaikeo_dataproc_test
+compatibility_version: 1.4.0
+plugin_config:
+  etsy:
+    datacop:
+      email_recipients:
+      - vchiapaikeo@etsy.com
+      - ajwhite@etsy.com
+    with_latest_build_jar: true
+dag_args:
+  schedule_interval: '@daily'
+  catchup: false
+  concurrency: 1
+  max_active_runs: 1
+default_task_args:
+  owner: vchiapaikeo
+  project_id: <<os.getenv('GOOGLE_CLOUD_PROJECT')>>
+  retries: 3
+  retry_delay: 10
+  start_date: '2019-10-01'
+  email_on_failure: true
+  email_on_retry: true
+  dataproc_hadoop_jars:
+    - '{{ macros.etsy.latest_build_jar(task) }}'
+resources:
+- name: dataproc-cluster
+  type: dataproc_cluster
+  properties:
+    cluster_name: vchiapaikeo-dataproc-test-{{ ds }}
+    num_workers: 20
+    num_preemptible_workers: 0
+    region: us-central1
+    properties:
+      mapred:mapreduce.jobhistory.move.interval-ms: '10000'
+    retries: 5
+operators:
+- name: search_query_distribution
+  type: scalding
+  requires_resources:
+  - dataproc-cluster
+  properties:
+    retries: 8  # For testing
+    runnable_class: com.etsy.scalding.jobs.SearchQueryDistribution
+    arguments:
+      - --date
+      - '{{ macros.etsy.hyphenated_days_before_yesterday(6, ds) }}'
+      - '--hdfs'
