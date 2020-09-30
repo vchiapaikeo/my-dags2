@@ -4,8 +4,7 @@ plugin_config:
   etsy:
     datacop:
       email_recipients:
-      - vchiapaikeo@etsy.com
-      - ajwhite@etsy.com
+      - vchiapaikeo@gmail.com
     with_latest_build_jar: true
 dag_args:
   schedule_interval: '@daily'
@@ -40,7 +39,7 @@ operators:
   - dataproc-cluster
   properties:
     retries: 8  # For testing
-    runnable_class: com.etsy.scalding.jobs.SearchQueryDistribution
+    runnable_class: some.etsy.job.SearchQueryDistribution
     arguments:
       - --date
       - '{{ macros.etsy.hyphenated_days_before_yesterday(6, ds) }}'
