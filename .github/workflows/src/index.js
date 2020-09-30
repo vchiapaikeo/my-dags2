@@ -106,18 +106,31 @@ async function runAction() {
       isSuccess: false,
       warning: [{
         path: 'dags/test_dag.yaml',
-        firstLine: 30,
-        lastLine: 30,
+        firstLine: 29,
+        lastLine: 29,
         message: "Too many nodes. This will cost us too much money",
       }],
       error: [{
         path: 'dags/test_dag.yaml',
-        firstLine: 37,
-        lastLine: 47,
-        message: "This operator is funky. Fix it",
+        firstLine: 35,
+        lastLine: 46,
+        message: "This operator looks funky. Please fix it",
       }],
     },
     summary: '1 errors and 1 warnings',
+  }, {
+    lintCheckName: 'DAG Sustainability',
+    lintResult: {
+      isSuccess: false,
+      warning: [{
+        path: 'dags/test_dag.yaml',
+        firstLine: 17,
+        lastLine: 17,
+        message: "Please lower number of retries.",
+      }],
+      error: [],
+    },
+    summary: '0 errors and 1 warnings',
   }];
 
   await Promise.all(
