@@ -14,7 +14,7 @@ dag_args:
 default_task_args:
   owner: vchiapaikeo
   project_id: <<os.getenv('GOOGLE_CLOUD_PROJECT')>>
-  retries: 3
+  retries: 2
   retry_delay: 10
   start_date: '2019-10-01'
   email_on_failure: true
